@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Saaya.API.Db;
 using Saaya.API.Db.Extensions;
 using Saaya.API.Db.Models;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Saaya.API.Controllers
 {
@@ -22,12 +25,12 @@ namespace Saaya.API.Controllers
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest(new List<Song>());
+                return BadRequest();
 
             if (!_db.Users.UserExists(AuthToken))
-                return BadRequest(new List<Song>());
+                return BadRequest();
 
-            return Ok(_db.Users.GetSongs(AuthToken) ?? new List<Song>());
+            return Ok(_db.Users.GetSongs(AuthToken));
         }
 
         [HttpGet("{playlist}")]
