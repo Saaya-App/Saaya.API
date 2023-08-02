@@ -18,8 +18,7 @@ namespace Saaya.API.Controllers
         }
 
         [HttpGet]
-        [Route("songs/")]
-        public IActionResult GetSongsForDevice()
+        public IActionResult GetUserSongs()
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
@@ -31,9 +30,8 @@ namespace Saaya.API.Controllers
             return Ok(_db.Users.GetSongs(AuthToken) ?? new List<Song>());
         }
 
-        [HttpGet]
-        [Route("songs/")]
-        public IActionResult GetAllSongsForPlaylist(int playlist)
+        [HttpGet("{playlist}")]
+        public IActionResult GetPlaylistSongs(int playlist)
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))

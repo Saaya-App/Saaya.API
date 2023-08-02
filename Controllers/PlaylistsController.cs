@@ -18,8 +18,7 @@ namespace Saaya.API.Controllers
         }
 
         [HttpGet]
-        [Route("playlists/")]
-        public IActionResult GetPlaylistsForDevice()
+        public IActionResult GetUserPlaylists()
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
