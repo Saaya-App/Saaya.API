@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using Saaya.API.Db.Models;
 
 namespace Saaya.API.Db

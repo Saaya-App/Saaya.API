@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Saaya.API.Db;
+using Saaya.API.Services;
+using YoutubeExplode;
 
 namespace Saaya.API
 {
@@ -19,6 +21,9 @@ namespace Saaya.API
 
             services.AddDbContext<ApiContext>(options => options.UseSqlite("Data Source=saaya.db"));
             services.AddScoped<ApiContext>();
+            services.AddScoped<LibraryService>();
+
+            services.AddSingleton<YoutubeClient>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
