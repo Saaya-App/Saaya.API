@@ -1,4 +1,3 @@
-
 namespace Saaya.API
 {
     public class Program

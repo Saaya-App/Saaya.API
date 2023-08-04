@@ -1,14 +1,18 @@
 ﻿#nullable disable
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Saaya.API.Db.Models
 {
     public class User : SaayaEntity
     {
+        public string? Avatar { get; set; }
+
         [Required]
         public string Username { get; set; }
 
         [Required]
+        [JsonIgnore]
         public string PasswordHash { get; set; }
 
         [Required]
@@ -17,7 +21,9 @@ namespace Saaya.API.Db.Models
         [Required]
         public string Token { get; set; }
 
+        [JsonIgnore]
         public List<Song> Songs { get; set; } = new List<Song>();
+        [JsonIgnore]
         public List<Playlist> Playlists { get; set; } = new List<Playlist>();
     }
 }
