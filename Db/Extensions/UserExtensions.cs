@@ -9,6 +9,9 @@ namespace Saaya.API.Db.Extensions
         public static bool UserExists(this DbSet<User> users, string token)
             => users.Any(x => x.Token == token);
 
+        public static User GetUser(this DbSet<User> users, string token)
+            => Include(users).Where(x => x.Token == token).FirstOrDefault();
+
         public static IQueryable<User> Include(this DbSet<User> users)
             => users.Include(x => x.Songs)
                     .Include(x => x.Playlists)
