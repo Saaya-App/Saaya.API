@@ -17,6 +17,12 @@ namespace Saaya.API.Db.Extensions
                     .AsNoTracking()
                     .AsQueryable();
 
+        /// <summary>
+        /// Gets all songs associated with the user token.
+        /// </summary>
+        /// <param name="user">The database set of users.</param>
+        /// <param name="token">The unique user token.</param>
+        /// <returns>List of songs associated with the user.</returns>
         public static List<Song>? GetSongs(this DbSet<User> user, string token)
             => Include(user)
                 .Where(x => x.Token == token)?
@@ -24,6 +30,12 @@ namespace Saaya.API.Db.Extensions
                 .Songs
                 .ToList();
 
+        /// <summary>
+        /// Gets all songs associated with the user token.
+        /// </summary>
+        /// <param name="user">The database set of users.</param>
+        /// <param name="token">The unique user token.</param>
+        /// <returns>List of playlists associated with the user.</returns>
         public static List<Playlist>? GetPlaylists(this DbSet<User> user, string token)
             => Include(user)
                 .Where(x => x.Token == token)?
@@ -31,6 +43,13 @@ namespace Saaya.API.Db.Extensions
                 .Playlists
                 .ToList();
 
+        /// <summary>
+        /// Gets all songs associated with the user token.
+        /// </summary>
+        /// <param name="user">The database set of users.</param>
+        /// <param name="token">The unique user token.</param>
+        /// <param name="playlist">The playlist ID.</param>
+        /// <returns>List of songs, in a specific playlist, associated with the user.</returns>
         public static List<Song>? GetPlaylistSongs(this DbSet<User> user, string token, int playlist)
             => Include(user)
                 .Where(x => x.Token == token)?

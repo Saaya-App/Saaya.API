@@ -21,12 +21,16 @@ namespace Saaya.API.Controllers
             _library = library;
         }
 
+        /// <summary>
+        /// Gets the playlists for the authenticated user.
+        /// </summary>
+        /// <returns>Returns an <c>IActionResult</c> object with list of playlists.</returns>
         [HttpGet]
         public IActionResult GetUserPlaylists()
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest(new List<Playlist>());
+                return Unauthorized("Token is invalid.");
 
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest(new List<Playlist>());
@@ -34,12 +38,17 @@ namespace Saaya.API.Controllers
             return Ok(_db.Users.GetPlaylists(AuthToken) ?? new List<Playlist>());
         }
 
+        /// <summary>
+        /// Adds a new playlist for the user.
+        /// </summary>
+        /// <param name="playlist">The playlist to add.</param>
+        /// <returns>Returns an <c>IActionResult</c> object.</returns>
         [HttpPost("{playlist}")]
         public async Task<IActionResult> AddPlaylist(string playlist)
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest();
+                return Unauthorized("Token is invalid.");
 
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest();

@@ -24,6 +24,12 @@ namespace Saaya.API.Services
             _yt = yt;
         }
 
+        /// <summary>
+        /// Downloads a song from a provided YouTube URL and adds it to the user's library.
+        /// </summary>
+        /// <param name="url">The URL of the YouTube video to download.</param>
+        /// <param name="user">The user to add the song to their library.</param>
+        /// <returns>True if the song was downloaded and added to the user's library, false otherwise.</returns>
         public async Task<bool> DownloadSong(string url, User user)
         {
             if (!Songs.IsMatch(Uri.UnescapeDataString(url)) && !ShortSongs.IsMatch(Uri.UnescapeDataString(url)))
@@ -54,6 +60,12 @@ namespace Saaya.API.Services
             return true;
         }
 
+        /// <summary>
+        /// Downloads a song from a provided YouTube URL and adds it to the user's library.
+        /// </summary>
+        /// <param name="playlist">The URL of the YouTube playlist from which to download videos.</param>
+        /// <param name="user">The user to add the song to their library.</param>
+        /// <returns>True if the playlist was downloaded and added to the user's library, false otherwise.</returns>
         public async Task<bool> DownloadPlaylist(string playlist, User user)
         {
             var result = Playlists.Match(Uri.UnescapeDataString(playlist));

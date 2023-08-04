@@ -21,12 +21,16 @@ namespace Saaya.API.Controllers
             _library = library;
         }
 
+        /// <summary>
+        /// Get user songs
+        /// </summary>
+        /// <returns>List of user songs</returns>
         [HttpGet]
         public IActionResult GetUserSongs()
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest();
+                return Unauthorized("Token is invalid.");
 
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest();
@@ -34,12 +38,17 @@ namespace Saaya.API.Controllers
             return Ok(_db.Users.GetSongs(AuthToken));
         }
 
+        /// <summary>
+        /// Get songs for a specific playlist
+        /// </summary>
+        /// <param name="playlist">The playlist ID</param>
+        /// <returns>A list of songs from the playlist</returns>
         [HttpGet("{playlist}")]
         public IActionResult GetPlaylistSongs(int playlist)
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest(new List<Song>());
+                return Unauthorized("Token is invalid.");
 
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest(new List<Song>());
@@ -47,12 +56,17 @@ namespace Saaya.API.Controllers
             return Ok(_db.Users.GetPlaylistSongs(AuthToken, playlist) ?? new List<Song>());
         }
 
+        /// <summary>
+        /// Adds a song for a user.
+        /// </summary>
+        /// <param name="song">The name of the song to be added.</param>
+        /// <returns>HTTP response indicating the success or failure of the operation.</returns>
         [HttpPost("{song}")]
         public async Task<IActionResult> AddSongForUser(string song)
         {
             string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
             if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest();
+                return Unauthorized("Token is invalid.");
 
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest();

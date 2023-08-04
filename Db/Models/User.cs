@@ -6,10 +6,13 @@ namespace Saaya.API.Db.Models
 {
     public class User : SaayaEntity
     {
+        public string? Avatar { get; set; }
+
         [Required]
         public string Username { get; set; }
 
         [Required]
+        [JsonIgnore]
         public string PasswordHash { get; set; }
 
         [Required]

@@ -13,4 +13,8 @@
     <PackageReference Include="YoutubeExplode" Version="6.3.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Auth\" />
+  </ItemGroup>
+
 </Project>
