@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#nullable disable
+using Microsoft.AspNetCore.Mvc;
+using Saaya.API.Common.Attributes;
 using Saaya.API.Db;
 using Saaya.API.Db.Extensions;
 using Saaya.API.Db.Models;
@@ -6,6 +8,7 @@ using Saaya.API.Services;
 
 namespace Saaya.API.Controllers
 {
+    [SaayaAuthorized]
     [Route("[controller]")]
     public class SongsController : ControllerBase
     {
@@ -28,12 +31,7 @@ namespace Saaya.API.Controllers
         [HttpGet]
         public IActionResult GetUserSongs()
         {
-            string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            if (string.IsNullOrEmpty(AuthToken))
-                return Unauthorized("Token is invalid.");
-
-            if (!_db.Users.UserExists(AuthToken))
-                return BadRequest();
+            string AuthToken = HttpContext.Items["AuthToken"] as string;
 
             return Ok(_db.Users.GetSongs(AuthToken));
         }
@@ -46,12 +44,7 @@ namespace Saaya.API.Controllers
         [HttpGet("{playlist}")]
         public IActionResult GetPlaylistSongs(int playlist)
         {
-            string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            if (string.IsNullOrEmpty(AuthToken))
-                return Unauthorized("Token is invalid.");
-
-            if (!_db.Users.UserExists(AuthToken))
-                return BadRequest(new List<Song>());
+            string AuthToken = HttpContext.Items["AuthToken"] as string;
 
             return Ok(_db.Users.GetPlaylistSongs(AuthToken, playlist) ?? new List<Song>());
         }
@@ -64,12 +57,7 @@ namespace Saaya.API.Controllers
         [HttpPost("{song}")]
         public async Task<IActionResult> AddSongForUser(string song)
         {
-            string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            if (string.IsNullOrEmpty(AuthToken))
-                return Unauthorized("Token is invalid.");
-
-            if (!_db.Users.UserExists(AuthToken))
-                return BadRequest();
+            string AuthToken = HttpContext.Items["AuthToken"] as string;
 
             var user = _db.Users.GetUser(AuthToken);
             

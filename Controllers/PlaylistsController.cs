@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#nullable disable
+using Microsoft.AspNetCore.Mvc;
+using Saaya.API.Common.Attributes;
 using Saaya.API.Db;
 using Saaya.API.Db.Extensions;
 using Saaya.API.Db.Models;
@@ -6,6 +8,7 @@ using Saaya.API.Services;
 
 namespace Saaya.API.Controllers
 {
+    [SaayaAuthorized]
     [Route("[controller]")]
     public class PlaylistsController : Controller
     {
@@ -46,12 +49,7 @@ namespace Saaya.API.Controllers
         [HttpPost("{playlist}")]
         public async Task<IActionResult> AddPlaylist(string playlist)
         {
-            string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            if (string.IsNullOrEmpty(AuthToken))
-                return Unauthorized("Token is invalid.");
-
-            if (!_db.Users.UserExists(AuthToken))
-                return BadRequest();
+            string AuthToken = HttpContext.Items["AuthToken"] as string;
 
             var result = await _library.DownloadPlaylist(playlist, _db.Users.Where(x => x.Token == AuthToken).FirstOrDefault());
             if (result)

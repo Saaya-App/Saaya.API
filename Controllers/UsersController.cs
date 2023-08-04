@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#nullable disable
+using Microsoft.AspNetCore.Mvc;
+using Saaya.API.Common.Attributes;
 using Saaya.API.Db;
 using Saaya.API.Db.Extensions;
 
 namespace Saaya.API.Controllers
 {
+    [SaayaAuthorized]
     [Route("[controller]")]
     public class UsersController : Controller
     {
@@ -14,15 +17,14 @@ namespace Saaya.API.Controllers
             _db = db;
         }
 
+        /// <summary>
+        /// Returns the information about the user making the API request.
+        /// </summary>
+        /// <returns>The user's information.</returns>
         [HttpGet("me")]
         public IActionResult GetUserInfo()
         {
-            string AuthToken = HttpContext.Request.Headers["Authorization"].ToString().Split(" ")[1];
-            if (string.IsNullOrEmpty(AuthToken))
-                return BadRequest();
-
-            if (!_db.Users.UserExists(AuthToken))
-                return BadRequest();
+            string AuthToken = HttpContext.Items["AuthToken"] as string;
 
             return Ok(_db.Users.GetUser(AuthToken));
         }
