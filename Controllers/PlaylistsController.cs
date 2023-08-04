@@ -44,9 +44,11 @@ namespace Saaya.API.Controllers
             if (!_db.Users.UserExists(AuthToken))
                 return BadRequest();
 
-            await _library.DownloadPlaylist(playlist, _db.Users.Where(x => x.Token == AuthToken).FirstOrDefault());
-
-            return Ok();
+            var result = await _library.DownloadPlaylist(playlist, _db.Users.Where(x => x.Token == AuthToken).FirstOrDefault());
+            if (result)
+                return Ok();
+            else
+                return BadRequest();
         }
     }
 }

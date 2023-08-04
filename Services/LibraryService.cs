@@ -24,10 +24,10 @@ namespace Saaya.API.Services
             _yt = yt;
         }
 
-        public async Task DownloadSong(string url, User user)
+        public async Task<bool> DownloadSong(string url, User user)
         {
             if (!Songs.IsMatch(Uri.UnescapeDataString(url)) && !ShortSongs.IsMatch(Uri.UnescapeDataString(url)))
-                return;
+                return false;
 
             string result = null;
             if (Songs.Match(Uri.UnescapeDataString(url)).Success)
@@ -37,8 +37,8 @@ namespace Saaya.API.Services
 
             var song = await _yt.Videos.GetAsync(result);
 
-            if (_db.Songs.Where(x => x.Url == song.Url && x.User == user).Any())
-                return;
+            if (_db.Songs.Where(x => x.Url == song.Url && x.UserId == user.Id).Any())
+                return false;
 
             await _db.Songs.AddAsync(new Song
             {
@@ -51,13 +51,14 @@ namespace Saaya.API.Services
             });
 
             await _db.SaveChangesAsync();
+            return true;
         }
 
-        public async Task DownloadPlaylist(string playlist, User user)
+        public async Task<bool> DownloadPlaylist(string playlist, User user)
         {
             var result = Playlists.Match(Uri.UnescapeDataString(playlist));
             if (!result.Success)
-                return;
+                return false;
 
             var YTPlaylist = await _yt.Playlists.GetAsync(result.Groups[0].Value);
 
@@ -65,7 +66,7 @@ namespace Saaya.API.Services
 
             await foreach (var video in _yt.Playlists.GetVideosAsync(Uri.UnescapeDataString(playlist)))
             {
-                if (_db.Songs.Where(x => x.Url == video.Url && x.User == user).Any())
+                if (_db.Songs.Where(x => x.Url == video.Url && x.UserId == user.Id).Any())
                     continue;
 
                 songs.Add(new Song
@@ -89,7 +90,7 @@ namespace Saaya.API.Services
             });
 
             await _db.SaveChangesAsync();
-
+            return true;
         }
     }
 }

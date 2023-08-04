@@ -59,9 +59,11 @@ namespace Saaya.API.Controllers
 
             var user = _db.Users.GetUser(AuthToken);
             
-            await _library.DownloadSong(song, user);
-
-            return Ok();
+            var result = await _library.DownloadSong(song, user);
+            if (result)
+                return Ok();
+            else
+                return BadRequest();
         }
     }
 }
