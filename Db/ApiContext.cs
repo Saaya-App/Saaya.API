@@ -6,6 +6,7 @@ namespace Saaya.API.Db
     public class ApiContext : DbContext
     {
         public DbSet<User> Users { get; set; }
+        public DbSet<Info> News { get; set; }
 
         public DbSet<Song> Songs { get; set; }
         public DbSet<Playlist> Playlists { get; set; }
